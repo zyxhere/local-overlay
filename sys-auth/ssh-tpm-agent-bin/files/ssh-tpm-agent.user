@@ -1,0 +1,27 @@
+#!/sbin/openrc-run
+
+# check the reexport thingy
+SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}"/$RC_SVCNAME.sock
+
+supervisor=supervise-daemon
+
+description="ssh-tpm-agent user service"
+command=/opt/bin/ssh-tpm-agent
+
+depend() {
+    reexport SSH_AUTH_SOCK
+}
+
+start_pre() {
+    if [ -n "$SSH_AGENT_PID" ]; then
+	eerror "\$SSH_AGENT_PID is set, aborting"
+	return 1
+    fi
+
+    return 0
+}
+
+start_post() {
+    einfo "Set SSH_AUTH_SOCK to $(ssh-tpm-agent --print-socket)"
+    einfo "to use $description"
+}

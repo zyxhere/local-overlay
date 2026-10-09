@@ -1,0 +1,5 @@
+# Path to the directory to look for the TPM sealed keys in
+KEYS_DIR=/etc/ssh
+
+# Additional options to pass to ssh-tpm-agent
+OPTS=""

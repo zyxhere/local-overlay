@@ -1,0 +1,22 @@
+#!/sbin/openrc-run
+
+supervisor=supervise-daemon
+
+description="ssh-tpm-agent service"
+command=/opt/bin/ssh-tpm-agent
+command_args="--key-dir $KEY_DIR $OPTS"
+
+depend() {
+	want ssh-tpm-genkeys
+	after net
+	reexport SSH_AGENT_PID
+}
+
+start_pre() {
+    if [ -n "$SSH_AGENT_PID" ]; then
+		eerror "\$SSH_AGENT_PID is set, aborting"
+		return 1
+    fi
+
+    return 0
+}

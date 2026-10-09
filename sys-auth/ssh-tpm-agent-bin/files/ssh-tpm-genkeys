@@ -1,0 +1,21 @@
+#!/sbin/openrc-run
+
+description="SSH TPM Key Generation"
+command=/opt/bin/ssh-tpm-keygen
+command_args="-A"
+
+start_pre() {
+    for i in /etc/ssh/ssh_tpm*; do
+	if [ -f $i ]; then
+	    einfo "TPM backed keys already created"
+	    mark_service_inactive
+	fi
+    done
+
+    return 0
+}
+
+start_post() {
+    einfo "Successfully created TPM backed keys"
+    mark_service_inactive
+}
